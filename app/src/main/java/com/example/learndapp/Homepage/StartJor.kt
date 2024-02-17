@@ -2,6 +2,7 @@ package com.example.learndapp.Homepage
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,8 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -87,7 +90,7 @@ fun secondScreen() {
                             load = (((currentStop.preSum / lastStop.preSum)).toFloat())
                             selectedFilters=selectedFilters + journeyDetails.stops[indeces].name
                         } catch (e: IndexOutOfBoundsException) {
-                          print(e)
+
 
                         }
 
@@ -174,22 +177,27 @@ fun secondScreen() {
                         .padding(10.dp),
                 )
                 Column(
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(0.dp),
                 ) {
 
                     LazyColumn(Modifier) {
                         itemsIndexed(journeyDetails.stops) { index, item ->
-                            Column(
+                            Card(
+                                colors = CardDefaults.cardColors(
+                                    containerColor=Color.White
+                                ),
                                 modifier = Modifier.padding(10.dp)
                             ) {
                                 Row(
                                     modifier = Modifier
                                         .padding(10.dp)
                                         .fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Box(
                                         modifier = Modifier
-                                            .size(65.dp)
+                                            .size(45.dp)
                                             .clip(RoundedCornerShape(18.dp))
                                             .background(color = Color(0xFFe7f0f4))
                                     ) {
@@ -197,7 +205,7 @@ fun secondScreen() {
                                             painter = painterResource(id = R.drawable.location),
                                             contentDescription = "location",
                                             modifier = Modifier
-                                                .size(40.dp)
+                                                .size(30.dp)
                                                 .align(Alignment.Center),
                                             tint = Color.Black
                                         )
@@ -222,7 +230,7 @@ fun secondScreen() {
                                                     fontWeight = FontWeight.Light,
                                                     fontFamily = FontFamily(Font(R.font.fallingsky))
                                                 ),
-                                                modifier = Modifier.padding(10.dp)
+                                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 10.dp)
                                             )
                                         }
                                         Row {
@@ -242,33 +250,41 @@ fun secondScreen() {
                                         }
                                     }
                                     FilterChip(
-                                    colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = Color(0xFF129CED),
-                                    selectedLabelColor = Color.White,
-                                    labelColor = Color.Black,
-                                    disabledContainerColor = Color.Gray,
-                                    disabledLabelColor  = Color.Black,
-                                    containerColor =Color(0xFFE6EFF3),
-                                    disabledSelectedContainerColor = Color.Gray.copy(alpha = 0.5f),
+                                        colors = FilterChipDefaults.filterChipColors(
+                                            selectedContainerColor = Color(0xFF129CED),
+                                            selectedLabelColor = Color.White,
+                                            labelColor = Color.Black,
+                                            disabledContainerColor = Color.Gray,
+                                            disabledLabelColor = Color.Black,
+                                            containerColor = Color(0xFFE6EFF3),
+                                            disabledSelectedContainerColor = Color.Gray.copy(alpha = 0.5f),
 //
-                                    ),
-                                    modifier = Modifier.padding(1.dp).fillMaxHeight(),
+                                        ),
+                                        modifier = Modifier
+                                            .padding(horizontal = 7.dp).align(Alignment.CenterVertically),
                                         onClick = {
-                                          if(item.name !in selectedFilters){
-                                              selectedFilters = selectedFilters + item.name
-                                            for (i in 0 until index){
-                                                val stopAbove = journeyDetails.stops[i]
-                                                if (stopAbove.name !in selectedFilters) {
-                                                    selectedFilters = selectedFilters + stopAbove.name
+                                            try{
+                                                if (item.name !in selectedFilters) {
+
+                                                    for (i in 0 until index+1) {
+                                                        selectedFilters = selectedFilters + item.name
+                                                        val stopAbove = journeyDetails.stops[i]
+                                                        if (stopAbove.name !in selectedFilters) {
+                                                            selectedFilters =
+                                                                selectedFilters + stopAbove.name
+                                                        }
+                                                        indeces = i
+                                                        val lastStop = journeyDetails.stops.last()
+                                                        val currentStop =
+                                                            journeyDetails.stops[i]
+                                                        load =
+                                                            (((currentStop.preSum / lastStop.preSum)).toFloat())
+                                                    }
                                                 }
-                                                indeces =i
-                                                val lastStop = journeyDetails.stops.last()
-                                                val currentStop = journeyDetails.stops[indeces]
-                                                load = (((currentStop.preSum / lastStop.preSum)).toFloat())}
-                                          }
+                                            }catch (_:IndexOutOfBoundsException){}
                                         },
                                         label = {
-                                            Text("Reached", modifier = Modifier.padding(3.dp))
+                                            Text("Reached", modifier = Modifier.padding(5.dp))
                                         },
                                         selected = item.name in selectedFilters,
                                         leadingIcon = if (item.name in selectedFilters) {
@@ -284,6 +300,7 @@ fun secondScreen() {
                                         },
                                     )
                                 }
+
                             }
                         }
                     }
