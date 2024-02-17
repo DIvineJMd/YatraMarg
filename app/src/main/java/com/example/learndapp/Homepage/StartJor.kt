@@ -64,8 +64,9 @@ import kotlin.math.roundToInt
 fun secondScreen() {
     var load by remember { mutableFloatStateOf(0f) }
     var indeces by remember {
-        mutableStateOf(0)
+        mutableStateOf(-1)
     }
+    var selectedFilters by remember { mutableStateOf(listOf<String>()) }
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -84,8 +85,9 @@ fun secondScreen() {
                             val lastStop = journeyDetails.stops.last()
                             val currentStop = journeyDetails.stops[indeces]
                             load = (((currentStop.preSum / lastStop.preSum)).toFloat())
+                            selectedFilters=selectedFilters + journeyDetails.stops[indeces].name
                         } catch (e: IndexOutOfBoundsException) {
-                            // Handle the exception, e.g., log it or set a default value for load
+                          print(e)
 
                         }
 
@@ -146,12 +148,12 @@ fun secondScreen() {
             )
         }
     ) {
-        var selectedFilters by remember { mutableStateOf(listOf<String>()) }
+
 
         Column(modifier = Modifier.padding(it)) {
             Column(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(5.dp)
                     .fillMaxWidth()
             ) {
                 Text(
@@ -162,7 +164,7 @@ fun secondScreen() {
                         fontWeight = FontWeight.Light,
                         fontFamily = FontFamily(Font(R.font.fallingsky))
                     ),
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp)
                 )
                 LinearProgressIndicator(
                     color = Color(0xFF129CED),
@@ -250,10 +252,19 @@ fun secondScreen() {
                                     disabledSelectedContainerColor = Color.Gray.copy(alpha = 0.5f),
 //
                                     ),
-                                    modifier = Modifier.padding(5.dp).fillMaxHeight(),
+                                    modifier = Modifier.padding(1.dp).fillMaxHeight(),
                                         onClick = {
                                           if(item.name !in selectedFilters){
                                               selectedFilters = selectedFilters + item.name
+                                            for (i in 0 until index){
+                                                val stopAbove = journeyDetails.stops[i]
+                                                if (stopAbove.name !in selectedFilters) {
+                                                    selectedFilters = selectedFilters + stopAbove.name
+                                                }
+                                                indeces =i
+                                                val lastStop = journeyDetails.stops.last()
+                                                val currentStop = journeyDetails.stops[indeces]
+                                                load = (((currentStop.preSum / lastStop.preSum)).toFloat())}
                                           }
                                         },
                                         label = {
