@@ -1,6 +1,7 @@
 package com.example.learndapp.Homepage
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,8 +10,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -55,6 +58,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.learndapp.Homepage.JHome.Companion.journeyDetails
@@ -154,6 +158,11 @@ fun secondScreen(navController: NavController) {
         }
     ) {
 
+        if(load*100 ==100f){
+            CompletionDialog {
+                navController.popBackStack()
+            }
+        }
 
         Column(modifier = Modifier.padding(it)) {
             Column(
@@ -353,6 +362,27 @@ fun secondScreen(navController: NavController) {
         }
     }
 }
+@Composable
+fun CompletionDialog(onDismissRequest: () -> Unit) {
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200 .dp)
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            Image(painter = painterResource(id = R.drawable.reached), contentDescription = "Congratulation Icon",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(10.dp))
+                    .align(Alignment.CenterHorizontally)
+                   
+            )
+
+        }
+    }
+}
 
  fun convertKilometersToMiles(kilometers: Double): Double {
 
@@ -363,5 +393,5 @@ fun secondScreen(navController: NavController) {
 @Preview
 fun presec() {
     val navController = rememberNavController()
-    secondScreen(navController)
+ secondScreen(navController = navController)
 }
