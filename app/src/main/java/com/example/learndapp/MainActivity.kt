@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = "Home"
                     ) {
                         composable("Home"){JHome().homeScreen(navController)}
-                        composable("Second"){ secondScreen()}
+                        composable("Second"){ secondScreen(navController)}
                     }
                 }
             }

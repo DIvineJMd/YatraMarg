@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Menu
@@ -47,6 +49,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -69,6 +72,9 @@ class JHome() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun homeScreen(navController: NavController){
+        var destination by remember { mutableStateOf("Destination") }
+        var stops by remember { mutableStateOf(SnapshotStateList<Stop>()) }
+        var showInKilometers by remember { mutableStateOf(true) }
         Scaffold(
             bottomBar= {
                 BottomAppBar(
@@ -139,11 +145,10 @@ class JHome() {
             }
         ) {
             //content
-            var destination by remember { mutableStateOf("Destination") }
-            var stops by remember { mutableStateOf(SnapshotStateList<Stop>()) }
-            var showInKilometers by remember { mutableStateOf(true) }
 
-            Column(modifier = Modifier.fillMaxHeight()
+
+            Column(modifier = Modifier
+                .fillMaxHeight()
                 .padding(it)
             ) {
                 Column(modifier = Modifier
@@ -407,6 +412,8 @@ class JHome() {
                     }
                 }
             },
+            keyboardActions= KeyboardActions(onDone = { onClickAction.invoke() }),
+
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()

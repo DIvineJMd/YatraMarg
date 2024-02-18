@@ -55,6 +55,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.learndapp.Homepage.JHome.Companion.journeyDetails
 import com.example.learndapp.Homepage.JHome.Companion.kilo
 import com.example.learndapp.R
@@ -64,7 +66,7 @@ import kotlin.math.roundToInt
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun secondScreen() {
+fun secondScreen(navController: NavController) {
     var load by remember { mutableFloatStateOf(0f) }
     var indeces by remember {
         mutableStateOf(-1)
@@ -129,7 +131,7 @@ fun secondScreen() {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle back button click */ }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             Icons.Default.ArrowBack,
                             contentDescription = "Back",
@@ -176,6 +178,47 @@ fun secondScreen() {
                         .fillMaxWidth()
                         .padding(10.dp),
                 )
+                Row(modifier = Modifier,
+                    horizontalArrangement = Arrangement.Absolute.Right){
+
+                    if (indeces >= 0) {
+                        Text(
+                            text = if (kilo) {
+                                "Distance Left: ${
+                                    ((journeyDetails.stops.last().preSum) - (journeyDetails.stops[indeces].preSum)).roundToInt()
+                                } km"
+                            } else {
+                                "Distance Left: ${
+                                    convertKilometersToMiles((journeyDetails.stops.last().preSum) - (journeyDetails.stops[indeces].preSum)).roundToInt()
+                                } miles"
+                            },
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            style = TextStyle(
+                                color = Color.Black,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontFamily = FontFamily.SansSerif
+                            )
+                        )
+                    } else {
+                        Text(
+                            text = if (kilo) {
+                                "Distance Left: ${(journeyDetails.stops.last().preSum).roundToInt()} Km"
+                            } else {
+                                "Distance Left: ${convertKilometersToMiles(journeyDetails.stops.last().preSum).roundToInt()} miles"
+                            },
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            style = TextStyle(
+                                color = Color.Black,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontFamily = FontFamily.SansSerif
+                            )
+                        )
+                    }
+
+
+                }
                 Column(
                     modifier = Modifier.padding(0.dp),
                 ) {
@@ -261,7 +304,8 @@ fun secondScreen() {
 //
                                         ),
                                         modifier = Modifier
-                                            .padding(horizontal = 7.dp).align(Alignment.CenterVertically),
+                                            .padding(horizontal = 7.dp)
+                                            .align(Alignment.CenterVertically),
                                         onClick = {
                                             try{
                                                 if (item.name !in selectedFilters) {
@@ -318,5 +362,6 @@ fun secondScreen() {
 @Composable
 @Preview
 fun presec() {
-    secondScreen()
+    val navController = rememberNavController()
+    secondScreen(navController)
 }
