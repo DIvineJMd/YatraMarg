@@ -19,6 +19,7 @@ The Journey Tracker app is designed to provide users with information about thei
 ## Getting Started
 To run the Journey Tracker app on your Android device or emulator, follow these steps:
 1. Clone the repository to your local machine.
+  git clone https://github.com/DIvineJMd/YatraMarg.git
 2. Open the project in Android Studio.
 3. Run the app on your desired device or emulator.
 
